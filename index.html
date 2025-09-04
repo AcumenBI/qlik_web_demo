@@ -168,7 +168,7 @@
         <h1>Get started with Embedded Analytics.</h1>
         <p class="lead muted">Whether you’re aiming to enhance user experiences, leverage data-driven decision-making, add interactive analytics to your customer portals, or add AI and NL insights to your product or service, you can leverage Qlik Cloud to rapidly enhance your web apps, or bring complete customization to your end user experiences..</p>
         <div style="display:flex; gap:.75rem; flex-wrap:wrap; margin-top:1rem;">
-          <a href="#services" class="btn primary">Explore services</a>
+          <a href="#services" class="btn primary">Explore options</a>
           <a href="#work" class="btn ghost">See our approach</a>
         </div>
       </div>
@@ -198,24 +198,42 @@
           <h2>Embdeded Analytics</h2>
           <p class="muted">Qlik-embed is Qlik’s primary embedding framework, simplifying embedding of Qlik technologies</p>
         </div>
-        <a href="#contact" class="btn ghost">Discuss a brief</a>
+        <a href="#contact" class="btn ghost">Explore more</a>
       </div>
       <div class="grid cols-3">
         <article class="card">
           <div class="icon" aria-hidden="true">🏗️</div>
-          <h3>Analytics Platform Build (Qlik Cloud)</h3>
-          <p class="muted">Design and deploy a secure multi‑space environment with CI/CD, logging, and coverage reporting.</p>
+          <h3>Why qlik-embed</h3>
+          <p class="muted">Using qlik-embed web components is an improvement over iframes in several ways.</p>
         </article>
         <article class="card">
           <div class="icon" aria-hidden="true">🧭</div>
-          <h3>Options Analysis</h3>
-          <p class="muted">Clarity on consolidating environments and staged rollouts.</p>
+          <h3>Flexible Options</h3>
+          <p class="muted">Embed charts, entire sheets and even chat bots.</p>
         </article>
         <article class="card">
           <div class="icon" aria-hidden="true">⚙️</div>
-          <h3>Workflow Automation</h3>
-          <p class="muted">Leverage Qlik, Power Platform, and Fabric to automate operational processes.</p>
+          <h3>Annoymous Access</h3>
+          <p class="muted">Embed Qlik analytics in public facing websites.</p>
         </article>
+      </div>
+    </div>
+  </section>
+  
+    <!-- ======= Embedded Sheet Section ======= -->
+  <section id="embedded-sheet" class="section">
+    <div class="container" style="max-width: none; padding: 0;">
+      <div style="padding: var(--space-12); text-align: center;">
+        <h2>Explore the Full Sheet</h2>
+        <p class="muted">Below is a fully embedded Qlik Sense sheet — seamlessly integrated into your web experience using <code>&lt;qlik-embed&gt;</code>.</p>
+      </div>
+      <div style="width: 100%; min-height: 80vh; background: var(--ink-50); display: flex; align-items: center; justify-content: center;">
+        <qlik-embed
+          ui="analytics/sheet"
+          app-id="4f6dcc8d-81b0-405f-b217-fa386600312d"
+          sheet-id="mdEzrC"
+          style="width:100%; height:100%; border:none;"
+        ></qlik-embed>
       </div>
     </div>
   </section>
