@@ -126,8 +126,19 @@
     .card h3{ margin:.25rem 0 .5rem; font-size:1.1rem; }
     .icon{ width:36px; height:36px; border-radius:10px; display:grid; place-items:center; background:var(--brand-100); color:var(--brand-700); }
     .surface{ border-radius: var(--radius-xl); background: linear-gradient(180deg, #ffffff, #f7f9fc); border:1px solid #e9edf5; box-shadow: var(--shadow-md); }
-	.classic-app {height: 800px; width: 1200px; margin: 0 auto; display: flex; justify-content: center; align-items: center; border: 1px solid #bbb; border-radius: 3px; box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2); box-sizing: border-box; overflow: auto;}
-    /* ======= Footer ======= */
+	.classic-app {
+  height: 800px;
+  width: 1200px;       /* fixed width */
+  margin: 0 auto;      /* centres the box */
+  display: block;      /* no need for flex if you’re just centring */
+  border: 1px solid #bbb;
+  border-radius: 3px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  overflow: auto;
+}
+   
+   /* ======= Footer ======= */
     footer{ padding: var(--space-12) 0; border-top:1px solid #e9edf5; }
     .footer-grid{ display:grid; gap:1.25rem; }
     @media (min-width: 900px){ .footer-grid{ grid-template-columns: 1.3fr repeat(3, 1fr); } }
@@ -221,22 +232,22 @@
   </section>
   
     <!-- ======= Embedded Sheet Section ======= -->
-  <section id="embedded-sheet" class="section">
-    <div class="container" style="max-width: none; padding: 0;">
-      <div style="padding: var(--space-12); text-align: center;">
-        <h2>Explore the Full Sheet</h2>
-        <p class="muted">Below is a fully embedded Qlik Sense sheet — seamlessly integrated into your web experience using qlik-embed.</p>
-      </div>
-      <div class="classic-app">
-          <qlik-embed
-            ui="classic/app"
-            app-id="4f6dcc8d-81b0-405f-b217-fa386600312d"
-            sheet-id="mdEzrC"
-          ></qlik-embed>
-        </div>
+<section id="embedded-sheet" class="section">
+  <div class="container" style="max-width: none; padding: 0;">
+    <div style="padding: var(--space-12); text-align: center;">
+      <h2>Explore the Full Sheet</h2>
+      <p class="muted">Below is a fully embedded Qlik Sense sheet — seamlessly integrated into your web experience using qlik-embed.</p>
     </div>
-  </section>
-
+    <div class="classic-app">
+      <qlik-embed
+        ui="classic/app"
+        app-id="4f6dcc8d-81b0-405f-b217-fa386600312d"
+        sheet-id="mdEzrC"
+      ></qlik-embed>
+    </div>
+  </div>
+</section>
+  
   <!-- ======= Footer ======= -->
   <footer role="contentinfo">
     <div class="container footer-grid">
