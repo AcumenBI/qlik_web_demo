@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en-NZ">
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Qlik Answers – Acumen BI Demo</title>
+      <meta name="description" content="Ask questions in natural language and get instant, AI-powered answers from your data." />
+      <style>
+         /* ======= Design Tokens (mirrored from main site) ======= */
+         :root {
+            --brand-50: #f5fbff;
+            --brand-100: #e6f5ff;
+            --brand-200: #cfeaff;
+            --brand-300: #a8d8ff;
+            --brand-400: #73baff;
+            --brand-500: #3c97ff;
+            --brand-600: #257fff;
+            --brand-700: #1b68d6;
+            --brand-800: #1653aa;
+            --brand-900: #133f7f;
+            --ink-900: #0b1220;
+            --ink-800: #121a2a;
+            --ink-700: #1c2740;
+            --ink-600: #2b3854;
+            --ink-500: #435472;
+            --ink-400: #6b7a94;
+            --ink-300: #98a3b6;
+            --ink-200: #c7ceda;
+            --ink-100: #e7ebf2;
+            --ink-50: #f6f7fb;
+            --success: #11a66a;
+            --radius-xl: 1.25rem;
+            --radius-lg: 0.875rem;
+            --radius-md: 0.625rem;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 6px 20px rgba(6, 24, 44, 0.12);
+            --shadow-lg: 0 12px 40px rgba(2, 8, 20, 0.16);
+            --container: 1200px;
+         }
+
+         @media (prefers-color-scheme: dark) {
+            :root {
+               --brand-50: #071423;
+               --brand-100: #0c1d30;
+               --brand-200: #113047;
+               --brand-300: #153f5b;
+               --brand-400: #1a5378;
+               --brand-500: #1e67a0;
+               --ink-900: #f6f7fb;
+               --ink-800: #e7ebf2;
+               --ink-700: #c7ceda;
+               --ink-600: #98a3b6;
+               --ink-500: #6b7a94;
+               --ink-400: #435472;
+               --ink-300: #2b3854;
+               --ink-200: #1c2740;
+               --ink-100: #121a2a;
+               --ink-50: #0b1220;
+            }
+            body { background: var(--ink-50); color: var(--ink-900); }
+            .card { background: #0d1423; }
+            .nav {
+               background: linear-gradient(180deg, rgba(10,15,26,0.8), rgba(10,15,26,0.2));
+               backdrop-filter: blur(8px);
+            }
+            .chat-panel {
+               background: #0d1423 !important;
+               border-color: var(--ink-200) !important;
+            }
+         }
+
+         /* ======= Base ======= */
+         html { scroll-behavior: smooth; }
+         body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+            color: var(--ink-800);
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+         }
+         .container {
+            max-width: var(--container);
+            margin-inline: auto;
+            padding-inline: 1.5rem;
+         }
+         .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.1rem;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            font-size: 0.95rem;
+         }
+         .btn.primary { background: var(--brand-600); color: #fff; }
+         .btn.primary:hover { background: var(--brand-700); }
+         .btn.ghost {
+            background: transparent;
+            border-color: var(--ink-200);
+            color: var(--ink-800);
+         }
+         .btn.ghost:hover { border-color: var(--ink-300); }
+         .tag {
+            display: inline-block;
+            padding: 0.35rem 0.7rem;
+            border-radius: 999px;
+            background: var(--brand-100);
+            color: var(--brand-700);
+            font-weight: 600;
+            font-size: 0.8rem;
+         }
+         .muted { color: var(--ink-500); }
+
+         /* ======= Nav ======= */
+         .nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.7);
+            border-bottom: 1px solid rgba(2,8,20,0.06);
+         }
+         .nav-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+         }
+         .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+            text-decoration: none;
+            color: inherit;
+         }
+         .brand-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: conic-gradient(from 210deg at 50% 50%, var(--brand-400), var(--brand-700));
+            box-shadow: var(--shadow-md);
+         }
+         .nav-links {
+            display: flex;
+            gap: 1.25rem;
+            align-items: center;
+         }
+         .nav a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 600;
+         }
+
+         /* ======= Main Layout ======= */
+         .page-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+         }
+
+         /* ======= Page Header ======= */
+         .page-header {
+            padding: 3rem 0 2rem;
+            border-bottom: 1px solid var(--ink-100);
+         }
+         .page-header .tag { margin-bottom: 0.75rem; }
+         .page-header h1 {
+            font-size: clamp(1.75rem, 3vw + 0.5rem, 2.75rem);
+            line-height: 1.1;
+            margin: 0 0 0.6rem;
+            letter-spacing: -0.02em;
+         }
+         .page-header p {
+            margin: 0;
+            font-size: 1.1rem;
+            max-width: 60ch;
+         }
+
+         /* ======= Two-column content area ======= */
+         .split-layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: calc(100vh - 220px);
+         }
+
+         @media (max-width: 800px) {
+            .split-layout {
+               grid-template-columns: 1fr;
+               min-height: auto;
+            }
+         }
+
+         /* ---- Left panel: text content ---- */
+         .content-panel {
+            padding: 3rem 2.5rem 3rem 0;
+            border-right: 1px solid var(--ink-100);
+         }
+
+         @media (max-width: 800px) {
+            .content-panel {
+               padding: 2rem 0;
+               border-right: none;
+               border-bottom: 1px solid var(--ink-100);
+            }
+         }
+
+         .content-panel h2 {
+            font-size: 1.5rem;
+            margin: 0 0 0.5rem;
+            letter-spacing: -0.01em;
+         }
+         .content-panel p {
+            margin: 0 0 1.25rem;
+            line-height: 1.65;
+         }
+         .content-panel p:last-child { margin-bottom: 0; }
+
+         .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+         }
+         .feature-list li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+         }
+         .feature-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--brand-100);
+            color: var(--brand-700);
+            display: grid;
+            place-items: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+         }
+         .feature-text strong {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+            color: var(--ink-800);
+         }
+         .feature-text span {
+            font-size: 0.9rem;
+            color: var(--ink-500);
+            line-height: 1.5;
+         }
+
+         .divider {
+            height: 1px;
+            background: var(--ink-100);
+            margin: 2rem 0;
+         }
+
+         .use-case-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+         }
+         .use-case-chip {
+            padding: 0.6rem 0.9rem;
+            border-radius: var(--radius-md);
+            background: var(--ink-50);
+            border: 1px solid var(--ink-100);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--ink-600);
+         }
+         .use-case-chip::before {
+            content: "→ ";
+            color: var(--brand-500);
+            font-weight: 700;
+         }
+
+         /* ---- Right panel: chat ---- */
+         .chat-panel-wrapper {
+            padding: 3rem 0 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+         }
+
+         @media (max-width: 800px) {
+            .chat-panel-wrapper {
+               padding: 2rem 0;
+            }
+         }
+
+         .chat-panel-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--ink-400);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+         }
+         .chat-panel-label::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 3px rgba(17,166,106,0.2);
+         }
+
+         .chat-panel {
+            flex: 1;
+            min-height: 520px;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--ink-100);
+            background: var(--ink-50);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+         }
+
+         /* Qlik embed fills the entire panel */
+         .chat-panel qlik-embed {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            min-height: 520px;
+            display: block;
+         }
+
+         /* ======= Footer ======= */
+         footer {
+            padding: 3rem 0;
+            border-top: 1px solid #e9edf5;
+            margin-top: auto;
+         }
+         .footer-grid {
+            display: grid;
+            gap: 1.25rem;
+         }
+         @media (min-width: 900px) {
+            .footer-grid { grid-template-columns: 1.3fr repeat(3, 1fr); }
+         }
+         .credits {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--ink-500);
+         }
+      </style>
+
+      <!-- Qlik Embed Web Components -->
+      <script
+         crossorigin="anonymous"
+         type="application/javascript"
+         src="https://cdn.jsdelivr.net/npm/@qlik/embed-web-components@1/dist/index.min.js"
+         data-host="https://acumendemos.ap.qlikcloud.com"
+         data-client-id="588fc62d039dc05b2c2111375c675493"
+         data-redirect-uri="https://acumenbi.github.io/qlik_web_demo/index.html"
+         data-access-token-storage="session"
+      ></script>
+   </head>
+   <body>
+
+      <!-- ======= Navigation ======= -->
+      <header class="nav" role="banner">
+         <div class="container nav-wrap">
+            <a class="brand" href="index.html" aria-label="Homepage">
+               <span class="brand-logo" aria-hidden="true"></span>
+               <span>Acumen BI Demo – Qlik Embed</span>
+            </a>
+            <nav aria-label="primary" class="nav-links">
+               <a href="index.html#services">Services</a>
+               <a href="HNZ.html">HNZ Demo</a>
+               <a href="index.html#insights">Insights</a>
+               <a href="index.html#contact" class="btn primary">Talk to us</a>
+            </nav>
+         </div>
+      </header>
+
+      <main class="page-body">
+
+         <!-- ======= Page Header ======= -->
+         <div class="page-header">
+            <div class="container">
+               <span class="tag">AI · Natural Language · Qlik Answers</span>
+               <h1>Ask your data anything.</h1>
+               <p class="muted">
+                  Qlik Answers brings conversational AI directly to your analytics — no dashboards required.
+                  Type a question in plain English and get instant, context-aware answers from your data.
+               </p>
+            </div>
+         </div>
+
+         <!-- ======= Split Layout ======= -->
+         <section class="container" style="flex:1; display:flex; flex-direction:column;">
+            <div class="split-layout">
+
+               <!-- Left: Text Content -->
+               <div class="content-panel">
+                  <h2>What is Qlik Answers?</h2>
+                  <p class="muted">
+                     Qlik Answers is an AI-powered, conversational analytics assistant embedded directly into your
+                     applications. It uses Retrieval-Augmented Generation (RAG) to pull accurate, source-grounded
+                     responses from your connected knowledge bases — so you always know where the answer came from.
+                  </p>
+
+                  <ul class="feature-list">
+                     <li>
+                        <div class="feature-icon" aria-hidden="true">💬</div>
+                        <div class="feature-text">
+                           <strong>Natural Language Queries</strong>
+                           <span>Ask questions the way you'd ask a colleague — no SQL, no filter menus, no training required.</span>
+                        </div>
+                     </li>
+                     <li>
+                        <div class="feature-icon" aria-hidden="true">🔗</div>
+                        <div class="feature-text">
+                           <strong>Source-Grounded Responses</strong>
+                           <span>Every answer links back to the underlying data source, so you can verify and explore further.</span>
+                        </div>
+                     </li>
+                     <li>
+                        <div class="feature-icon" aria-hidden="true">⚡</div>
+                        <div class="feature-text">
+                           <strong>Instant Embed</strong>
+                           <span>Drop a single <code style="font-size:0.85em; background:var(--ink-100); padding:0.1em 0.35em; border-radius:4px;">&lt;qlik-embed&gt;</code> tag into any page. No iframe wrangling.</span>
+                        </div>
+                     </li>
+                     <li>
+                        <div class="feature-icon" aria-hidden="true">🔒</div>
+                        <div class="feature-text">
+                           <strong>Governed &amp; Secure</strong>
+                           <span>Answers respect your existing Qlik data governance, row-level security, and permissions.</span>
+                        </div>
+                     </li>
+                  </ul>
+
+                  <div class="divider"></div>
+
+                  <h2>Example questions to try</h2>
+                  <p class="muted" style="margin-bottom:0;">Type these into the chat panel to see Qlik Answers in action:</p>
+
+                  <div class="use-case-grid">
+                     <div class="use-case-chip">What were total sales last quarter?</div>
+                     <div class="use-case-chip">Which region has the highest churn?</div>
+                     <div class="use-case-chip">Compare revenue YoY by product</div>
+                     <div class="use-case-chip">Show top 5 customers by margin</div>
+                     <div class="use-case-chip">What drove the spike in returns?</div>
+                     <div class="use-case-chip">Forecast demand for next month</div>
+                  </div>
+               </div>
+
+               <!-- Right: Qlik Answers Chat -->
+               <div class="chat-panel-wrapper">
+                  <div class="chat-panel-label">Qlik Answers – Live demo</div>
+                  <div class="chat-panel">
+                     <!--
+                        Replace the attributes below with your actual Qlik Answers
+                        knowledge-base ID once it's configured in Qlik Cloud.
+
+                        Example:
+                        <qlik-embed
+                           ui="ai/assistant"
+                           ASSISTANT_ID="e7981610-bb83-4e77-b392-67d74a3f2708"
+                        ></qlik-embed>
+                     -->
+                     <qlik-embed
+                        ui="ai/assistant"
+                        assistant_id="e7981610-bb83-4e77-b392-67d74a3f2708"
+                     ></qlik-embed>
+                  </div>
+               </div>
+
+            </div>
+         </section>
+
+      </main>
+
+      <!-- ======= Footer ======= -->
+      <footer role="contentinfo">
+         <div class="container footer-grid">
+            <div>
+               <a class="brand" href="index.html" style="margin-bottom:0.5rem; display:flex;">
+                  <span class="brand-logo" aria-hidden="true"></span>
+                  <span style="margin-left:0.75rem;">Acumen BI Demo Site</span>
+               </a>
+               <p class="muted">Data &amp; analytics consultancy based in Aotearoa New Zealand.</p>
+               <p class="credits">© <span id="y"></span> Acumen BI. All rights reserved.</p>
+            </div>
+            <nav>
+               <h3 style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-400); margin:0 0 0.75rem;">Site</h3>
+               <a href="index.html#services" style="display:block; margin-bottom:0.4rem; color:var(--ink-600); text-decoration:none; font-weight:500;">Services</a>
+               <a href="index.html#work" style="display:block; margin-bottom:0.4rem; color:var(--ink-600); text-decoration:none; font-weight:500;">Work</a>
+               <a href="index.html#insights" style="display:block; color:var(--ink-600); text-decoration:none; font-weight:500;">Insights</a>
+            </nav>
+            <div>
+               <strong>Contact</strong>
+               <p class="muted">https://acumenbi.co.nz/<br />New Zealand</p>
+            </div>
+            <div>
+               <strong>Follow</strong>
+               <p class="muted">LinkedIn · YouTube · GitHub</p>
+            </div>
+         </div>
+      </footer>
+
+      <script>
+         document.getElementById("y").textContent = new Date().getFullYear();
+      </script>
+   </body>
+</html>
